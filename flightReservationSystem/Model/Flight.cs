@@ -16,21 +16,22 @@ namespace flightReservationSystem.Model
     {
         public Flight()
         {
-            this.Booking_office = new HashSet<Booking_office>();
-            this.Passenger = new HashSet<Passenger>();
+            this.Bookings = new HashSet<Booking>();
         }
     
-        public string From { get; set; }
-        public string To { get; set; }
-        public Nullable<System.DateTime> Dep_date { get; set; }
-        public Nullable<System.DateTime> Arrive_date { get; set; }
-        public int Flight_id { get; set; }
-        public string Class { get; set; }
-        public Nullable<System.DateTime> Arrive_time { get; set; }
-        public Nullable<System.DateTime> Dep_time { get; set; }
-        public string Airlines { get; set; }
+        public int FlightID { get; set; }
+        public string FlightNumber { get; set; }
+        public string DepartureCity { get; set; }
+        public string ArrivalCity { get; set; }
+        public System.DateTime DepartureDateTime { get; set; }
+        public System.DateTime ArrivalDateTime { get; set; }
+        public int SeatCapacity { get; set; }
+        public Nullable<int> DepartureCityID { get; set; }
+        public Nullable<int> ArrivalCityID { get; set; }
+        public Nullable<decimal> PricePerSeat { get; set; }
     
-        public virtual ICollection<Booking_office> Booking_office { get; set; }
-        public virtual ICollection<Passenger> Passenger { get; set; }
+        public virtual ICollection<Booking> Bookings { get; set; }
+        public virtual City City { get; set; }
+        public virtual City City1 { get; set; }
     }
 }

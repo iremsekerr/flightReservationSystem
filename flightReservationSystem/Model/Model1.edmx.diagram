@@ -4,18 +4,22 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="ee07e23c160449fca8cd953c3469dd57" Name="Diagram1">
-        <EntityTypeShape EntityType="thyModel.Admin" Width="1.5" PointX="0.75" PointY="5.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="thyModel.Airplane" Width="1.5" PointX="5" PointY="6" IsExpanded="true" />
-        <EntityTypeShape EntityType="thyModel.Airport" Width="1.5" PointX="2.75" PointY="5.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="thyModel.Booking_office" Width="1.5" PointX="0.75" PointY="1.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="thyModel.Flight" Width="1.5" PointX="5.25" PointY="1.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="thyModel.Passenger" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
-        <AssociationConnector Association="thyModel.FK_PASSENGE_SERVE_ADMIN" ManuallyRouted="false" />
-        <AssociationConnector Association="thyModel.FK_PASSENGE_BOOK_TICK_BOOKING_" ManuallyRouted="false" />
-        <AssociationConnector Association="thyModel.Has_Booking" ManuallyRouted="false" />
-        <AssociationConnector Association="thyModel.Land_on" ManuallyRouted="false" />
-        <AssociationConnector Association="thyModel.reserves" ManuallyRouted="false" />
+      <Diagram DiagramId="952762724b8a4dcd8799414060217f7e" Name="Diagram1" ZoomLevel="74">
+        <EntityTypeShape EntityType="BookingSystemModel.Booking" Width="1.5" PointX="7.375" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="BookingSystemModel.City" Width="1.5" PointX="3" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="BookingSystemModel.Country" Width="1.5" PointX="2" PointY="2.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BookingSystemModel.Flight" Width="1.5" PointX="5.25" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BookingSystemModel.Passenger" Width="1.5" PointX="9.75" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="BookingSystemModel.Payment" Width="1.5" PointX="9.625" PointY="6.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="BookingSystemModel.sysdiagram" Width="1.5" PointX="1" PointY="8" IsExpanded="true" />
+        <EntityTypeShape EntityType="BookingSystemModel.User" Width="1.5" PointX="5.125" PointY="1.125" IsExpanded="true" />
+        <AssociationConnector Association="BookingSystemModel.FK__Bookings__Flight__29572725" ManuallyRouted="false" />
+        <AssociationConnector Association="BookingSystemModel.FK__Bookings__UserID__286302EC" ManuallyRouted="false" />
+        <AssociationConnector Association="BookingSystemModel.FK__Passenger__Booki__403A8C7D" ManuallyRouted="false" />
+        <AssociationConnector Association="BookingSystemModel.FK__Payments__Bookin__2C3393D0" ManuallyRouted="false" />
+        <AssociationConnector Association="BookingSystemModel.FK__Cities__CountryI__3B75D760" ManuallyRouted="false" />
+        <AssociationConnector Association="BookingSystemModel.FK__Flights__Arrival__3D5E1FD2" ManuallyRouted="false" />
+        <AssociationConnector Association="BookingSystemModel.FK__Flights__Departu__3C69FB99" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

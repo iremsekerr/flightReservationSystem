@@ -14,23 +14,16 @@ namespace flightReservationSystem.Model
     
     public partial class Passenger
     {
-        public Passenger()
-        {
-            this.Flight = new HashSet<Flight>();
-        }
+        public int PassengerID { get; set; }
+        public Nullable<int> BookingID { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public Nullable<System.DateTime> DateOfBirth { get; set; }
+        public string Email { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Gender { get; set; }
+        public string PassportNumber { get; set; }
     
-        public byte[] Gender { get; set; }
-        public Nullable<int> Age { get; set; }
-        public string Pname { get; set; }
-        public int P_id { get; set; }
-        public string Aname { get; set; }
-        public Nullable<int> Office_id { get; set; }
-        public string address { get; set; }
-        public string Contact { get; set; }
-        public string E_mail { get; set; }
-    
-        public virtual Admin Admin { get; set; }
-        public virtual Booking_office Booking_office { get; set; }
-        public virtual ICollection<Flight> Flight { get; set; }
+        public virtual Booking Booking { get; set; }
     }
 }

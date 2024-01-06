@@ -1,0 +1,56 @@
+﻿@model List<flightReservationSystem.Model.UserBookingsViewModel>
+@{
+    ViewBag.Title = "GetUserBookings";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+
+
+<h2>Satın Alınan Biletler</h2>
+
+<table class="table table-responsive table-bordered">
+    <tr>
+        <th>Sıra Numarası</th>
+        <th>Uçuş Numarası</th>
+        <th>Kalkış Şehri</th>
+        <th>Varış Şehri</th>
+        <th>Kalkış Tarihi</th>
+        <th>Varış Tarihi</th>
+        <th>Koltuk Kapasitesi</th>
+        <th>Koltuk Ücreti</th>
+        <th>Yolcu Adı</th>
+        <th>Yolcu Soyadı</th>
+        <th>Yolcu Doğum Tarihi</th>
+        <th>Yolcu Emaili</th>
+        <th>Yolcu Telefonu</th>
+        <th>Cinnsiyet</th>
+        <th>Yolcu Pasaport Numarası</th>
+    </tr>
+
+    @{ int i = 1;}
+    @foreach (var booking in Model)
+    {
+        <tr>
+            <td>@i</td>
+            <td>@booking.FlightNumber</td>
+            <td>@booking.DepartureCityName</td>
+            <td>@booking.ArrivalCityName</td>
+            <td>@booking.FlightDepartureDateTime.ToString("MM/dd/yyyy HH:mm")</td>
+            <td>@booking.FlightArrivalDateTime.ToString("MM/dd/yyyy HH:mm")</td>
+            <td>@booking.FlightSeatCapacity</td>
+            <td>@booking.FlightPricePerSeat</td>
+            <td>@booking.FirstName</td>
+            <td>@booking.LastName</td>
+            <td>@booking.DateOfBirth.ToString("MM/dd/yyyy")</td>
+            <td>@booking.Email</td>
+            <td>@booking.PhoneNumber</td>
+            <td>@booking.Gender</td>
+            <td>@booking.PassportNumber</td>
+        </tr>
+        i++;
+    }
+</table>
+
+

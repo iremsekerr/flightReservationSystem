@@ -12,11 +12,14 @@ namespace flightReservationSystem.Model
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Objects;
+    using System.Data.Objects.DataClasses;
+    using System.Linq;
     
-    public partial class thyEntities : DbContext
+    public partial class BookingSystemEntities : DbContext
     {
-        public thyEntities()
-            : base("name=thyEntities")
+        public BookingSystemEntities()
+            : base("name=BookingSystemEntities")
         {
         }
     
@@ -25,11 +28,221 @@ namespace flightReservationSystem.Model
             throw new UnintentionalCodeFirstException();
         }
     
-        public DbSet<Admin> Admin { get; set; }
-        public DbSet<Airplane> Airplane { get; set; }
-        public DbSet<Airport> Airport { get; set; }
-        public DbSet<Booking_office> Booking_office { get; set; }
-        public DbSet<Flight> Flight { get; set; }
-        public DbSet<Passenger> Passenger { get; set; }
+        public DbSet<Booking> Bookings { get; set; }
+        public DbSet<City> Cities { get; set; }
+        public DbSet<Country> Countries { get; set; }
+        public DbSet<Flight> Flights { get; set; }
+        public DbSet<Passenger> Passengers { get; set; }
+        public DbSet<Payment> Payments { get; set; }
+        public DbSet<sysdiagram> sysdiagrams { get; set; }
+        public DbSet<User> Users { get; set; }
+    
+        public virtual int AddFlight(string flightNumber, Nullable<int> departureCityID, Nullable<int> arrivalCityID, Nullable<System.DateTime> departureDateTime, Nullable<System.DateTime> arrivalDateTime, Nullable<int> seatCapacity, Nullable<decimal> pricePerSeat)
+        {
+            var flightNumberParameter = flightNumber != null ?
+                new ObjectParameter("FlightNumber", flightNumber) :
+                new ObjectParameter("FlightNumber", typeof(string));
+    
+            var departureCityIDParameter = departureCityID.HasValue ?
+                new ObjectParameter("DepartureCityID", departureCityID) :
+                new ObjectParameter("DepartureCityID", typeof(int));
+    
+            var arrivalCityIDParameter = arrivalCityID.HasValue ?
+                new ObjectParameter("ArrivalCityID", arrivalCityID) :
+                new ObjectParameter("ArrivalCityID", typeof(int));
+    
+            var departureDateTimeParameter = departureDateTime.HasValue ?
+                new ObjectParameter("DepartureDateTime", departureDateTime) :
+                new ObjectParameter("DepartureDateTime", typeof(System.DateTime));
+    
+            var arrivalDateTimeParameter = arrivalDateTime.HasValue ?
+                new ObjectParameter("ArrivalDateTime", arrivalDateTime) :
+                new ObjectParameter("ArrivalDateTime", typeof(System.DateTime));
+    
+            var seatCapacityParameter = seatCapacity.HasValue ?
+                new ObjectParameter("SeatCapacity", seatCapacity) :
+                new ObjectParameter("SeatCapacity", typeof(int));
+    
+            var pricePerSeatParameter = pricePerSeat.HasValue ?
+                new ObjectParameter("PricePerSeat", pricePerSeat) :
+                new ObjectParameter("PricePerSeat", typeof(decimal));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("AddFlight", flightNumberParameter, departureCityIDParameter, arrivalCityIDParameter, departureDateTimeParameter, arrivalDateTimeParameter, seatCapacityParameter, pricePerSeatParameter);
+        }
+    
+        public virtual int AddUser(string username, string password, string email, string firstName, string lastName)
+        {
+            var usernameParameter = username != null ?
+                new ObjectParameter("Username", username) :
+                new ObjectParameter("Username", typeof(string));
+    
+            var passwordParameter = password != null ?
+                new ObjectParameter("Password", password) :
+                new ObjectParameter("Password", typeof(string));
+    
+            var emailParameter = email != null ?
+                new ObjectParameter("Email", email) :
+                new ObjectParameter("Email", typeof(string));
+    
+            var firstNameParameter = firstName != null ?
+                new ObjectParameter("FirstName", firstName) :
+                new ObjectParameter("FirstName", typeof(string));
+    
+            var lastNameParameter = lastName != null ?
+                new ObjectParameter("LastName", lastName) :
+                new ObjectParameter("LastName", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("AddUser", usernameParameter, passwordParameter, emailParameter, firstNameParameter, lastNameParameter);
+        }
+    
+        public virtual ObjectResult<GetUserBookings_Result> GetUserBookings(Nullable<int> userID)
+        {
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("UserID", userID) :
+                new ObjectParameter("UserID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetUserBookings_Result>("GetUserBookings", userIDParameter);
+        }
+    
+        public virtual int MakeBooking(Nullable<int> userID, Nullable<int> flightID, Nullable<int> numPassengers, Nullable<decimal> totalAmount)
+        {
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("UserID", userID) :
+                new ObjectParameter("UserID", typeof(int));
+    
+            var flightIDParameter = flightID.HasValue ?
+                new ObjectParameter("FlightID", flightID) :
+                new ObjectParameter("FlightID", typeof(int));
+    
+            var numPassengersParameter = numPassengers.HasValue ?
+                new ObjectParameter("NumPassengers", numPassengers) :
+                new ObjectParameter("NumPassengers", typeof(int));
+    
+            var totalAmountParameter = totalAmount.HasValue ?
+                new ObjectParameter("TotalAmount", totalAmount) :
+                new ObjectParameter("TotalAmount", typeof(decimal));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("MakeBooking", userIDParameter, flightIDParameter, numPassengersParameter, totalAmountParameter);
+        }
+    
+        public virtual ObjectResult<SearchFlights_Result> SearchFlights(Nullable<int> departureCityID, Nullable<int> arrivalCityID, Nullable<System.DateTime> departureDate)
+        {
+            var departureCityIDParameter = departureCityID.HasValue ?
+                new ObjectParameter("DepartureCityID", departureCityID) :
+                new ObjectParameter("DepartureCityID", typeof(int));
+    
+            var arrivalCityIDParameter = arrivalCityID.HasValue ?
+                new ObjectParameter("ArrivalCityID", arrivalCityID) :
+                new ObjectParameter("ArrivalCityID", typeof(int));
+    
+            var departureDateParameter = departureDate.HasValue ?
+                new ObjectParameter("DepartureDate", departureDate) :
+                new ObjectParameter("DepartureDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SearchFlights_Result>("SearchFlights", departureCityIDParameter, arrivalCityIDParameter, departureDateParameter);
+        }
+    
+        public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
+        {
+            var diagramnameParameter = diagramname != null ?
+                new ObjectParameter("diagramname", diagramname) :
+                new ObjectParameter("diagramname", typeof(string));
+    
+            var owner_idParameter = owner_id.HasValue ?
+                new ObjectParameter("owner_id", owner_id) :
+                new ObjectParameter("owner_id", typeof(int));
+    
+            var versionParameter = version.HasValue ?
+                new ObjectParameter("version", version) :
+                new ObjectParameter("version", typeof(int));
+    
+            var definitionParameter = definition != null ?
+                new ObjectParameter("definition", definition) :
+                new ObjectParameter("definition", typeof(byte[]));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_alterdiagram", diagramnameParameter, owner_idParameter, versionParameter, definitionParameter);
+        }
+    
+        public virtual int sp_creatediagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
+        {
+            var diagramnameParameter = diagramname != null ?
+                new ObjectParameter("diagramname", diagramname) :
+                new ObjectParameter("diagramname", typeof(string));
+    
+            var owner_idParameter = owner_id.HasValue ?
+                new ObjectParameter("owner_id", owner_id) :
+                new ObjectParameter("owner_id", typeof(int));
+    
+            var versionParameter = version.HasValue ?
+                new ObjectParameter("version", version) :
+                new ObjectParameter("version", typeof(int));
+    
+            var definitionParameter = definition != null ?
+                new ObjectParameter("definition", definition) :
+                new ObjectParameter("definition", typeof(byte[]));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_creatediagram", diagramnameParameter, owner_idParameter, versionParameter, definitionParameter);
+        }
+    
+        public virtual int sp_dropdiagram(string diagramname, Nullable<int> owner_id)
+        {
+            var diagramnameParameter = diagramname != null ?
+                new ObjectParameter("diagramname", diagramname) :
+                new ObjectParameter("diagramname", typeof(string));
+    
+            var owner_idParameter = owner_id.HasValue ?
+                new ObjectParameter("owner_id", owner_id) :
+                new ObjectParameter("owner_id", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_dropdiagram", diagramnameParameter, owner_idParameter);
+        }
+    
+        public virtual ObjectResult<sp_helpdiagramdefinition_Result> sp_helpdiagramdefinition(string diagramname, Nullable<int> owner_id)
+        {
+            var diagramnameParameter = diagramname != null ?
+                new ObjectParameter("diagramname", diagramname) :
+                new ObjectParameter("diagramname", typeof(string));
+    
+            var owner_idParameter = owner_id.HasValue ?
+                new ObjectParameter("owner_id", owner_id) :
+                new ObjectParameter("owner_id", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_helpdiagramdefinition_Result>("sp_helpdiagramdefinition", diagramnameParameter, owner_idParameter);
+        }
+    
+        public virtual ObjectResult<sp_helpdiagrams_Result> sp_helpdiagrams(string diagramname, Nullable<int> owner_id)
+        {
+            var diagramnameParameter = diagramname != null ?
+                new ObjectParameter("diagramname", diagramname) :
+                new ObjectParameter("diagramname", typeof(string));
+    
+            var owner_idParameter = owner_id.HasValue ?
+                new ObjectParameter("owner_id", owner_id) :
+                new ObjectParameter("owner_id", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_helpdiagrams_Result>("sp_helpdiagrams", diagramnameParameter, owner_idParameter);
+        }
+    
+        public virtual int sp_renamediagram(string diagramname, Nullable<int> owner_id, string new_diagramname)
+        {
+            var diagramnameParameter = diagramname != null ?
+                new ObjectParameter("diagramname", diagramname) :
+                new ObjectParameter("diagramname", typeof(string));
+    
+            var owner_idParameter = owner_id.HasValue ?
+                new ObjectParameter("owner_id", owner_id) :
+                new ObjectParameter("owner_id", typeof(int));
+    
+            var new_diagramnameParameter = new_diagramname != null ?
+                new ObjectParameter("new_diagramname", new_diagramname) :
+                new ObjectParameter("new_diagramname", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_renamediagram", diagramnameParameter, owner_idParameter, new_diagramnameParameter);
+        }
+    
+        public virtual int sp_upgraddiagrams()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_upgraddiagrams");
+        }
     }
 }

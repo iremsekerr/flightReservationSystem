@@ -1,0 +1,79 @@
+﻿@model flightReservationSystem.Model.PassengerBookingViewModel
+@{
+    ViewBag.Title = "MakeBooking";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="main-content">
+    <div class="section__content section__content--p30">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="container">
+                        <div class="container-fluid">
+                            @using (Html.BeginForm("MakeBooking", "Home", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+
+                                @Html.HiddenFor(model => model.UserId, new { @class = "form-control", value = ViewBag.UserId })
+                                @Html.HiddenFor(model => model.FlightId, new { @class = "form-control", value = ViewBag.FlightId })
+
+                                <div class="form-group">
+                                    <label><strong>Yolcu Sayısı</strong></label>
+                                    @Html.TextBoxFor(model => model.NumPassengers, new { @class = "form-control" })
+                                </div>
+
+                                <div class="form-group">
+                                    <label><strong>Tutar</strong></label>
+                                    @Html.TextBoxFor(model => model.TotalAmount, new { @class = "form-control" })
+                                </div>
+                                <h3>Yolcu Bilgileri</h3>
+
+                                <div id="passenger-container">
+                                    <!-- Passenger information fields will be added here dynamically -->
+                                </div>
+
+                                <button type="button" id="add-passenger-btn" class="btn btn-primary">Yolcu Ekle</button>
+                                <button type="submit" class="btn btn-primary">Satın Al</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="~/2093_flight/js/datepicker.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#add-passenger-btn").on("click", function () {
+            addPassengerField();
+        });
+
+        function addPassengerField() {
+            var index = $(".passenger-info").length + 1;
+
+            var passengerField = `
+                                        <div class="passenger-info">
+                                            <h4>Yolcu ${index}</h4>
+                                            <!-- Add your passenger information fields here -->
+                                            <input type="text" name="Passengers[${index - 1}].FirstName" class="form-control" placeholder="İsim">
+                                            <input type="text" name="Passengers[${index - 1}].LastName" class="form-control" placeholder="Soyisim">
+                                            <input type="text" name="Passengers[${index - 1}].DateOfBirth" class="form-control date" placeholder="Doğum Tarihi">
+                                            <input type="text" name="Passengers[${index - 1}].Email" class="form-control" placeholder="Email">
+                                            <input type="text" name="Passengers[${index - 1}].PhoneNumber" class="form-control" placeholder="Telefon Numarası">
+                                            <input type="text" name="Passengers[${index - 1}].Gender" class="form-control" placeholder="Cinsiyet">
+                                            <input type="text" name="Passengers[${index - 1}].PassportNumber" class="form-control" placeholder="Pasaport Numarası">
+                                        </div>
+                                    `;
+
+            $("#passenger-container").append(passengerField);
+            //$(".date-picker").datepicker({
+            //    dateFormat: 'mm/dd/yy'
+            //});
+        }
+    });
+</script>

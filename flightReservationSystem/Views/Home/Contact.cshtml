@@ -1,17 +1,99 @@
-﻿@{
-    ViewBag.Title = "Contact";
-}
-<h2>@ViewBag.Title.</h2>
-<h3>@ViewBag.Message</h3>
+﻿<section class="page-heading" id="top">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="logo">
+                    <img src="img/logo.png" alt="Flight Template">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="page-direction-button">
+                    <a href="~/"><i class="fa fa-home"></i>Anasayfa</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-<address>
-    One Microsoft Way<br />
-    Redmond, WA 98052-6399<br />
-    <abbr title="Phone">P:</abbr>
-    425.555.0100
-</address>
 
-<address>
-    <strong>Support:</strong>   <a href="mailto:Support@example.com">Support@example.com</a><br />
-    <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
-</address>
+
+<section class="contact-us">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="section-heading">
+                    <h2>İletişim Bilgileri</h2>
+                    <p> </p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                
+                <img src="~/2093_flight/img/contact-01.jpg" />
+            </div>
+            <div class="col-md-6">
+               
+                <img src="~/2093_flight/img/contact-02.jpg" />
+            </div>
+           
+    </div>
+</section>
+
+
+
+<section class="contact-form">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="section-heading">
+                    <h2> Mesaj Bırakın</h2>
+                </div>
+            </div>
+            <div class="col-md-6 col-md-offset-3">
+                <form id="contact" action="#" method="post">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <fieldset>
+                                <input name="name" type="text" class="form-control" id="name" placeholder="Adınız" required>
+                            </fieldset>
+                        </div>
+                        <div class="col-md-6">
+                            <fieldset>
+                                <input name="email" type="text" class="form-control" id="email" placeholder="Mailiniz" required>
+                            </fieldset>
+                        </div>
+                        <div class="col-md-12">
+                            <fieldset>
+                                <textarea name="message" rows="6" class="form-control" id="message" placeholder="Mesajınız" required></textarea>
+                            </fieldset>
+                        </div>
+                        <div class="col-md-12">
+                            <fieldset>
+                                <button type="submit" id="form-submit" class="btn">Gönder</button>
+                            </fieldset>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<section class="map">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div id="map">
+                    <!-- How to change your own map point
+                        1. Go to Google Maps
+                        2. Click on your location point
+                        3. Click "Share" and choose "Embed map" tab
+                        4. Copy only URL and paste it within the src="" field below
+                    -->
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7895.485196115994!2d103.85995441789784!3d1.2880401763270322!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x7fb4e58ad9cd826e!2sSingapore+Flyer!5e0!3m2!1sen!2sth!4v1505825620371" width="100%" height="500" frameborder="0" style="border:0" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
