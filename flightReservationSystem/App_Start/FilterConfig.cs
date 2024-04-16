@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using System.Web.Mvc;
 
-namespace flightReservationSystem
+namespace FlightReservationSystem
 {
     public class FilterConfig
     {

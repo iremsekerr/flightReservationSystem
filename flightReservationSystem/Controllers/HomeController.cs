@@ -1,181 +1,154 @@
-﻿using flightReservationSystem.Model;
+﻿using FlightReservationSystem.Models;
 using System;
 using System.Collections.Generic;
-using System.Data;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Security;
 
-namespace flightReservationSystem.Controllers
+namespace FlightReservationSystem.Controllers
 {
     public class HomeController : Controller
     {
-        BookingSystemEntities db = new BookingSystemEntities();
+
+        private FlightReservationSystemContext db = new FlightReservationSystemContext();
         public ActionResult Index()
         {
-            ViewBag.cities = db.Cities.OrderBy(x => x.CityName).ToList();
-            return View();
-        }
-        [HttpGet]
-        public ActionResult AddUser()
-        {
-            return View();
-        }
 
-        [HttpPost]
-        public ActionResult AddUser(User user)
-        {
-            try
+            ViewData["Message"] = "Welcome to ASP.NET MVC!";
+
+            var srclist = new List<Schedule>();
+            var destlist = new List<Schedule>();
+            string cString = ConfigurationManager.ConnectionStrings["FlightReservationSystemContext"].ConnectionString;
+            //string cString = "Data Source=(LocalDb)\\MSSQLLocalDB;Initial Catalog = aspnet-FlightReservationSystem-20151101020301; Integrated Security = True";
+            using (SqlConnection c = new SqlConnection(cString))
             {
-                db.Database.ExecuteSqlCommand("[dbo].[AddUser] @UserName, @Password, @Email, @FirstName, @LastName",
-                    new SqlParameter("UserName", user.Username),
-                    new SqlParameter("Password", user.Password),
-                    new SqlParameter("Email", user.Email),
-                    new SqlParameter("FirstName", user.FirstName),
-                    new SqlParameter("LastName", user.LastName)
-                    
-                );
-
-                return RedirectToAction("UserLogin", "Home");
-            }
-            catch (Exception ex)
-            {
-                return View("Error");
-            }
-        }
-        [HttpPost]
-        public ActionResult SearchFlight(Flight model)
-        {
-            try
-            {
-                List<Flight> results = db.Database.SqlQuery<Flight>(
-                    "[dbo].[SearchFlights] @DepartureCityID, @ArrivalCityID, @DepartureDate",
-                    new SqlParameter("DepartureCityID", model.DepartureCityID),
-                    new SqlParameter("ArrivalCityID", model.ArrivalCityID),
-                    new SqlParameter("DepartureDate", model.DepartureDateTime.ToString())
-                ).ToList();
-
-                
-
-                return View(results); 
-            }
-            catch (Exception ex)
-            {
-                return View("Error");
-            }
-        }
-        public ActionResult UserLogin()
-        {
-            
-
-            return View();
-        }
-        [HttpPost]
-        public ActionResult UserLogin(User user)
-        {
-            var bilgiler = db.Users.Where(x => x.Username == user.Username.Trim() &&
-                x.Password == user.Password).FirstOrDefault();
-
-            if (bilgiler != null)
-            {
-                FormsAuthentication.SetAuthCookie(bilgiler.Username, false);
-                Session["Username"] = bilgiler.Username;
-                Session["UserId"] = bilgiler.UserID;
-                return RedirectToAction("Index", "Home");
-            }
-
-            return View();
-
-           
-        }
-        public ActionResult MakeBooking(int userid,int flightId)
-        {
-            ViewBag.UserId = userid;
-            ViewBag.FlightId = flightId;
-
-            return View();
-        }
-        [HttpPost]
-        public ActionResult MakeBooking(PassengerBookingViewModel bookingViewModel)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
+                c.Open();
+                using (SqlCommand cmd = new SqlCommand("SELECT DISTINCT source FROM Schedule", c))
                 {
-                    return View(bookingViewModel);
+                    using (SqlDataReader rdr = cmd.ExecuteReader())
+                    {
+                        while (rdr.Read())
+                        {
+                            srclist.Add(new Schedule
+                            {
+                                source = rdr.GetString(0)
+                            });
+                        }
+                    }
                 }
-
-                //var passengersDataTable = CreatePassengersDataTable(bookingViewModel.Passengers);
-
-                db.Database.ExecuteSqlCommand("EXEC MakeBooking @UserID, @FlightID, @NumPassengers, @TotalAmount, @PassengersInfo",
-                    new SqlParameter("@UserID", bookingViewModel.UserId),
-                    new SqlParameter("@FlightID", bookingViewModel.FlightId),
-                    new SqlParameter("@NumPassengers", bookingViewModel.NumPassengers),
-                    new SqlParameter("@TotalAmount", bookingViewModel.TotalAmount),
-                   new SqlParameter("@PassengersInfo", CreatePassengersDataTable(bookingViewModel.Passengers)) { TypeName = "dbo.PassengerType" }
-
-                );
-
-                return RedirectToAction("GetUserBookings", "Home", new { userId = bookingViewModel.UserId });
-
+                using (SqlCommand cmd = new SqlCommand("SELECT DISTINCT dest FROM Schedule", c))
+                {
+                    using (SqlDataReader rdr = cmd.ExecuteReader())
+                    {
+                        while (rdr.Read())
+                        {
+                            destlist.Add(new Schedule
+                            {
+                                dest = rdr.GetString(0)
+                            });
+                        }
+                    }
+                }
             }
-            catch (Exception ex)
-            {
-                return View("Error");
-            }
+
+            ViewBag.source = new SelectList(srclist, "source", "source");
+            ViewBag.dest = new SelectList(destlist, "dest", "dest");
+
+            //ViewBag.source = new SelectList(db.Schedule, "source","source");
+            //ViewBag.dest = new SelectList(db.Schedule, "dest", "dest");
+            //ViewBag.date = new DateTime();
+            ViewBag.date = new DateTime();
+            return View();
         }
 
-
-        private DataTable CreatePassengersDataTable(List<PassengerType> passengers)
+        [HttpPost]
+        public ActionResult SearchResults(string source, string dest, DateTime dateOfJourney)
         {
-            DataTable dataTable = new DataTable("dbo.PassengerType");
-            dataTable.Columns.Add("FirstName", typeof(string));
-            dataTable.Columns.Add("LastName", typeof(string));
-            dataTable.Columns.Add("DateOfBirth", typeof(DateTime));
-            dataTable.Columns.Add("Email", typeof(string));
-            dataTable.Columns.Add("PhoneNumber", typeof(string));
-            dataTable.Columns.Add("Gender", typeof(string));
-            dataTable.Columns.Add("PassportNumber", typeof(string));
 
-            foreach (var passenger in passengers)
+            //var srclist = new List<Schedule>();
+            //var destlist = new List<Schedule>();
+            //string cString = ConfigurationManager.ConnectionStrings["FlightReservationSystemContext"].ConnectionString;
+            ////string cString = "Data Source=(LocalDb)\\MSSQLLocalDB;Initial Catalog = aspnet-FlightReservationSystem-20151101020301; Integrated Security = True";
+            //using (SqlConnection c = new SqlConnection(cString))
+            //{
+            //    c.Open();
+            //    using (SqlCommand cmd = new SqlCommand("SELECT * FROM Schedule WHERE source = @source and dest = @dest and scheduleDate = @dateOfJourney", c))
+            //    {
+            //        using (SqlDataReader rdr = cmd.ExecuteReader())
+            //        {
+            //            while (rdr.Read())
+            //            {
+            //                srclist.Add(new Schedule
+            //                {
+            //                    source = rdr.GetString(0)
+            //                });
+            //            }
+            //        }
+            //    }
+            //    using (SqlCommand cmd = new SqlCommand("SELECT DISTINCT dest FROM Schedule", c))
+            //    {
+            //        using (SqlDataReader rdr = cmd.ExecuteReader())
+            //        {
+            //            while (rdr.Read())
+            //            {
+            //                destlist.Add(new Schedule
+            //                {
+            //                    dest = rdr.GetString(0)
+            //                });
+            //            }
+            //        }
+            //    }
+            //}
+            ////ViewData["source"] = source;
+            ////ViewData["destination"] = destination;
+            ////ViewData["dateOfJourney"] = dateOfJourney;
+            ViewBag.Source = source;
+            ViewBag.Dest = dest;
+            ViewBag.ScheduleMessage = "";
+            if (DateTime.Compare(dateOfJourney,DateTime.Today) > 0 ) {
+                var data = from s in db.Schedule
+                           where s.source == source && s.dest == dest && s.scheduleDate == dateOfJourney
+                           select s;
+                if (data.ToList().Count() == 0)
+                {
+                    ViewBag.ScheduleMessage = "No flights on the entered date, below are the flights from other days";
+                    data = from s in db.Schedule
+                           where s.source == source && s.dest == dest && DateTime.Compare(s.scheduleDate, DateTime.Today) > 0
+                           select s;
+                }
+                return View(data.ToList());
+            }
+            else
             {
-                dataTable.Rows.Add(
-                    passenger.FirstName,
-                    passenger.LastName,
-                    passenger.DateOfBirth.ToString(),
-                    passenger.Email,
-                    passenger.PhoneNumber,
-                    passenger.Gender,
-                    passenger.PassportNumber
-                );
+
+                //var data = from s in db.Schedule
+                //           where s.source == source && s.dest == dest && s.scheduleDate.CompareTo(DateTime.Today) >= 0 && TimeSpan.Compare(s.depatureTime,DateTime.Now.TimeOfDay) > 0
+                //           select s;
+                var data = from s in db.Schedule
+                           where s.source == source && s.dest == dest && DateTime.Compare(s.scheduleDate, DateTime.Today) >= 0
+                           select s;
+                if (dateOfJourney.CompareTo(DateTime.Today) == 0)
+                    ViewBag.ScheduleMessage = "Cannot book flights for today for requested source and destination. Flights from requested source to destination are listed below";
+                else
+                    ViewBag.ScheduleMessage = "Entered past date, flights from requested source to destination are listed below";
+                return View(data.ToList());
+
             }
 
-            return dataTable;
         }
 
 
-        public ActionResult GetUserBookings(int userId)
+        public ActionResult About()
         {
-            try
-            {
-                var userBookings = db.Database.SqlQuery<UserBookingsViewModel>(
-                    "EXEC GetUserBookings @UserID",
-                    new SqlParameter("@UserID", userId)
-                ).ToList();
 
-                return View(userBookings);
-            }
-            catch (Exception ex)
-            {
-                // Handle exceptions, log errors, etc.
-                return View("Error");
-            }
+
+            return View();
         }
+
         public ActionResult Contact()
         {
-           
 
             return View();
         }
